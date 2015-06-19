@@ -1,7 +1,7 @@
 using GLib;
 
 [CCode (lower_case_cprefix = "", cheader_filename = "libserialport.h")]
-namespace SerialPort
+namespace LibSerialPort
 {
     [CCode (cname = "int", cprefix = "SP_", has_type_id = "false")]
     public enum Return
