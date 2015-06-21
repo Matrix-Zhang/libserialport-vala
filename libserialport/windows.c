@@ -538,5 +538,5 @@ out_close:
 	RegCloseKey(key);
 out_done:
 
-	return (index > 0 ? index : ret);;
+	return ret;
 }

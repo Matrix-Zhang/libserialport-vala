@@ -348,14 +348,14 @@ SP_API enum sp_return sp_list_ports(struct sp_port ***list_ptr)
 
 	ret = list_ports(&list);
 
-	if (ret >= 0) {
+	if (ret == SP_OK) {
 		*list_ptr = list;
 	} else {
 		sp_free_port_list(list);
 		*list_ptr = NULL;
 	}
-	
-	return ret;
+
+	RETURN_CODEVAL(ret);
 #endif
 }
 

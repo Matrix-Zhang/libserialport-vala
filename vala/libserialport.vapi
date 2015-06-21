@@ -184,12 +184,27 @@ namespace LibSerialPort
         public static Return new_by_name(string name, out Port? port);
         [CCode (cname = "sp_list_ports", has_type_id = "false")]
         public static int _enum ([CCode (array_length = false)] out Port[] a);
-        public static Port[] @enum () 
+        public static Port[]? @enum () 
         {
             Port[] temp;
-            var len = _enum (out temp);
-            temp.length = len;
-            return (owned) temp;
+            
+            var res = _enum (out temp);
+            
+            if(null != temp)
+            {
+            	int i = 0;
+            	
+		        while(temp[i] != null)
+		        {
+		        	i++;
+		        }
+		        
+		        temp.length = i;
+		        
+		        return (owned) temp;
+            }
+            
+            return null;
         }
         [CCode (cname = "sp_open", has_type_id = "false")]
         public Return open(OpenMode mode);

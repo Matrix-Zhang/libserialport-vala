@@ -187,7 +187,6 @@ SP_PRIV enum sp_return list_ports(struct sp_port ***list)
 	DIR *dir;
 	int ret = SP_OK;
 	struct stat statbuf;
-	int count = 0;
 
 	DEBUG("Enumerating tty devices");
 	if (!(dir = opendir("/sys/class/tty")))
@@ -240,11 +239,8 @@ SP_PRIV enum sp_return list_ports(struct sp_port ***list)
 			SET_ERROR(ret, SP_ERR_MEM, "List append failed");
 			break;
 		}
-		
-		count++;
 	}
-	
 	closedir(dir);
 
-	return (count > 0 ? count : ret);
+	return ret;
 }
