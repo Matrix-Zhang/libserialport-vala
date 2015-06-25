@@ -1,5 +1,3 @@
-using GLib;
-
 [CCode (lower_case_cprefix = "", cheader_filename = "libserialport.h")]
 namespace LibSerialPort
 {
@@ -12,7 +10,7 @@ namespace LibSerialPort
         ERR_MEM,
         ERR_SUPP
     }
-    
+
     [CCode (cname = "int", cprefix = "SP_BUF_", has_type_id = "false")]
     public enum Buffer
     {
@@ -20,7 +18,7 @@ namespace LibSerialPort
         OUTPUT,
         BOTH
     }
-    
+
     [CCode (cname = "int", cprefix = "SP_PARITY_", has_type_id = "false")]
     public enum Parity
     {
@@ -31,7 +29,7 @@ namespace LibSerialPort
         MARK,
         SPACE
     }
-    
+
     [CCode (cname = "int", cprefix = "SP_RTS_", has_type_id = "false")]
     public enum Rts
     {
@@ -40,7 +38,7 @@ namespace LibSerialPort
         ON,
         FLOW_CONTROL
     }
-    
+
     [CCode (cname = "int", cprefix = "SP_CTS_", has_type_id = "false")]
     public enum Cts
     {
@@ -48,7 +46,7 @@ namespace LibSerialPort
         IGNORE,
         FLOW_CONTROL
     }
-    
+
     [CCode (cname = "int", cprefix = "SP_DTR_", has_type_id = "false")]
     public enum Dtr
     {
@@ -57,7 +55,7 @@ namespace LibSerialPort
         ON,
         FLOW_CONTROL
     }
-    
+
     [CCode (cname = "int", cprefix = "SP_DSR_", has_type_id = "false")]
     public enum Dsr
     {
@@ -65,7 +63,7 @@ namespace LibSerialPort
         IGNORE,
         FLOW_CONTROL
     }
-    
+
     [CCode (cname = "int", cprefix = "SP_XONXOFF_", has_type_id = "false")]
     public enum XonXoff
     {
@@ -75,7 +73,7 @@ namespace LibSerialPort
         OUT,
         INOUT
     }
-    
+
     [CCode (cname = "int", cprefix = "SP_FLOWCONTROL_", has_type_id = "false")]
     public enum FlowControl
     {
@@ -84,7 +82,7 @@ namespace LibSerialPort
         RTSCTS,
         DTRDSR
     }
-    
+
     [CCode (cname = "int", cprefix = "SP_MODE_", has_type_id = "false")]
     public enum OpenMode
     {
@@ -92,7 +90,7 @@ namespace LibSerialPort
         WRITE,
         READ_WRITE
     }
-    
+
     [CCode (cname = "int", cprefix = "SP_EVENT_", has_type_id = "false")]
     public enum EventMask
     {
@@ -100,7 +98,7 @@ namespace LibSerialPort
         TX_READY,
         ERROR
     }
-    
+
     [CCode (cname = "enum sp_signal", cprefix = "SP_SIG_", has_type_id = "false")]
     public enum Signal
     {
@@ -109,7 +107,7 @@ namespace LibSerialPort
         DCD,
         RI
     }
-    
+
     [CCode (cname = "enum sp_transport", cprefix = "SP_TRANSPORT_", has_type_id = "false")]
     public enum Transport
     {
@@ -117,7 +115,7 @@ namespace LibSerialPort
         USB,
         BLUETOOTH
     }
-    
+
     [CCode (cname = "struct sp_port_config", free_function = "sp_free_config", has_type_id = "false")]
     [Compact]
     public class Config
@@ -163,7 +161,7 @@ namespace LibSerialPort
         [CCode (cname = "sp_set_config_flowcontrol", has_type_id = "false")]
         public Return set_flowcontrol(FlowControl flowcontrol);
     }
-    
+
     [CCode (cname = "struct sp_event_set", free_function = "sp_free_event_set", has_type_id = "false")]
     [Compact]
     public class EventSet
@@ -175,7 +173,7 @@ namespace LibSerialPort
         [CCode (cname = "sp_wait", has_type_id = "false")]
         public Return wait(uint timeout = 0);
     }
-    
+
     [CCode (cname = "struct sp_port", free_function = "sp_free_port", has_type_id = "false")]
     [Compact]
     public class Port
@@ -184,28 +182,43 @@ namespace LibSerialPort
         public static Return new_by_name(string name, out Port? port);
         [CCode (cname = "sp_list_ports", has_type_id = "false")]
         public static int _enum ([CCode (array_length = false)] out Port[] a);
-        public static Port[]? @enum () 
+        public static Port[]? @enum ()
         {
             Port[] temp;
-            
+
             var res = _enum (out temp);
-            
+
             if(null != temp)
             {
             	int i = 0;
-            	
+
 		        while(temp[i] != null)
 		        {
 		        	i++;
 		        }
-		        
+
 		        temp.length = i;
-		        
+
 		        return (owned) temp;
             }
-            
+
             return null;
         }
+        
+        public string to_string()
+        {
+        	string str = " ";
+        	
+        	str += this.get_description();
+        	
+        	if(Transport.USB == this.get_transport())
+        	{
+        		str += " " + this.get_usb_product();
+        	}
+        	
+        	return str;
+        }
+        
         [CCode (cname = "sp_open", has_type_id = "false")]
         public Return open(OpenMode mode);
         [CCode (cname = "sp_close", has_type_id = "false")]
